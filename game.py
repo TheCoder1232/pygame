@@ -20,7 +20,7 @@ everything = pygame.sprite.Group()
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Explosion, self).__init__()
-        sheet = pygame.image.load("x.png")
+        sheet = pygame.image.load("x.png") # Add full path of file
         self.images = []
         for i in range(0, 768, 48):
             rect = pygame.Rect((i, 0, 48, 48))
@@ -111,14 +111,16 @@ class BulletSprite(pygame.sprite.Sprite):
 class EnemySprite(pygame.sprite.Sprite):
     def __init__(self, x_pos, groups):
         super(EnemySprite, self).__init__()
-        self.image = pygame.image.load("enemy.png").convert_alpha()
+        self.image = pygame.image.load(
+            "enemy.png").convert_alpha()# Add full path of file
         self.rect = self.image.get_rect()
         self.rect.center = (x_pos, 0)
 
         self.velocity = random.randint(3, 10)
 
         self.add(groups)
-        self.explosion_sound = pygame.mixer.Sound("Arcade Explo A.wav")
+        self.explosion_sound = pygame.mixer.Sound(
+            "Arcade Explo A.wav")# Add full path of file
         self.explosion_sound.set_volume(0.4)
 
     def update(self):
@@ -163,7 +165,8 @@ class StatusSprite(pygame.sprite.Sprite):
 class ShipSprite(pygame.sprite.Sprite):
     def __init__(self, groups, weapon_groups):
         super(ShipSprite, self).__init__()
-        self.image = pygame.image.load("ship.png").convert_alpha()
+        self.image = pygame.image.load(
+            "ship.png").convert_alpha() # Add full path of file
         self.rect = self.image.get_rect()
         self.rect.center = (X_MAX/2, Y_MAX - 40)
         self.dx = self.dy = 0
@@ -191,7 +194,9 @@ class ShipSprite(pygame.sprite.Sprite):
                 self.shot = BulletSprite(x, y)
                 self.shot.add(self.groups)
 
-            if self.health < 0:
+            if self.health <= 0:
+                self.health = 0
+            if self.health <= 0:
                 self.kill()
         else:
             if not self.in_position:
@@ -271,7 +276,7 @@ def main():
 
     # Get some music
     if pygame.mixer.get_init():
-        pygame.mixer.music.load("DST-AngryMod.mp3")
+        pygame.mixer.music.load("DST-AngryMod.mp3") # Add full path of file
         pygame.mixer.music.set_volume(0.8)
         pygame.mixer.music.play(-1)
 
@@ -317,7 +322,7 @@ def main():
         for i in hit_ships:
             ship.health -= 15
 
-        if ship.health < 0:
+        if ship.health <= 0:
             if deadtimer:
                 deadtimer -= 1
             else:
@@ -326,7 +331,7 @@ def main():
         # Check for successful attacks
         hit_ships = pygame.sprite.groupcollide(
             enemies, weapon_fire, True, True)
-        for k, v in hit_ships.iteritems():
+        for k, v in hit_ships.items():
             k.kill()
             for i in v:
                 i.kill()
@@ -337,7 +342,7 @@ def main():
             EnemySprite(pos, [everything, enemies])
 
         # Check for game over
-        if ship.score > 1000:
+        if ship.score >= 1000:
             game_over = True
             for i in enemies:
                 i.kill()
